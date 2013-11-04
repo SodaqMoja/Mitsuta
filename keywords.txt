@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map For Mitsuta
+# Careful. Don't try to align the declarations.
+# Separate with one TAB only (Huh? Yep!)
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Mitsuta	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+#n	KEYWORD2
+#mean	KEYWORD2
+#sumsq	KEYWORD2
+#reset	KEYWORD2
+#first_value	KEYWORD2
+#next_value	KEYWORD2
+#add_sumsq	KEYWORD2
+
+#######################################
+# Instances (KEYWORD3)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
