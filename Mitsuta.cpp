@@ -57,6 +57,10 @@ void Mitsuta::next(int16_t val)
 
 int16_t Mitsuta::mean() const
 {
+  if (_n == 0) {
+    // Nothing was stored. What can we do?
+    return 0;
+  }
   int16_t value = _sum / _n;
   while (value < 0)
     value += 360;
