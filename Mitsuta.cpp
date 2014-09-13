@@ -62,9 +62,7 @@ int16_t Mitsuta::mean() const
     return 0;
   }
   int16_t value = _sum / _n;
-  while (value < 0)
-    value += 360;
-  return value;
+  return (value + 360) % 360;
 }
 
 /*
