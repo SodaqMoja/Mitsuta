@@ -44,7 +44,9 @@ void Mitsuta::next(int16_t val)
     return;
   }
   _d -= 180;
-  _d += (val - _d) % 360;
+  int16_t delta = val - _d;
+  delta += 360;         // This is needed to avoid modulo on negative values
+  _d += delta % 360;
   _sum += _d;
   ++_n;
 }
