@@ -1,0 +1,107 @@
+#! /usr/bin/env python
+#
+# Copyright (c) 2014 Kees Bakker.  All rights reserved.
+#
+# This file is part of Mitsuta.
+#
+# Mitsuta is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as
+# published bythe Free Software Foundation, either version 3 of
+# the License, or(at your option) any later version.
+#
+# Mitsuta is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with Mitsuta.  If not, see
+# <http://www.gnu.org/licenses/>.
+#
+# This Python script is meant to analyse the Mitsuta algorithm
+# with some test vectors.
+#
+# Details about the Mitsuta algorithm can be found at:
+#    http://abelian.org/vlf/bearings.html
+#
+# There are two alternatives (mitsuta_mean2 and mitsuta_mean3)
+# which avoid the if-else statements. They can be cheaper in
+# code size (for example on an Atmel processor).
+
+import random
+
+def mitsuta_mean(b):
+    D = b[0]
+    mysum = D
+    for val in b[1:]:
+        delta = val - D
+        if delta < -180:
+            D = D + delta + 360
+        elif delta < 180:
+            D = D + delta
+        else:
+            D = D + delta - 360
+        mysum = mysum + D
+    m = mysum / len(b)
+    return (m + 360) % 360
+
+def mitsuta_mean2(b):
+    D = b[0]
+    mysum = D
+    for val in b[1:]:
+        delta = val - (D - 180)
+        D = (D - 180) + (delta % 360)
+        mysum = mysum + D
+    m = mysum / len(b)
+    return (m + 360) % 360
+
+def mitsuta_mean3(b):
+    D = b[0]
+    mysum = D
+    for val in b[1:]:
+        D = D - 180
+        delta = val - D
+        D = D + (delta % 360)
+        mysum = mysum + D
+    m = mysum / len(b)
+    return (m + 360) % 360
+
+def doTest(vec):
+    nm, vec = vec
+    m = mitsuta_mean(vec)
+    m2 = mitsuta_mean2(vec)
+    if m != m2:
+        print("m=%d <> m2=%d" % (m, m2))
+    m3 = mitsuta_mean3(vec)
+    if m != m3:
+        print("m=%d <> m3=%d" % (m, m3))
+    print("%s: %s => %d" % (nm, vec, m))
+
+testvec1 = [350, 351, 352, 2, 3, 4]
+doTest(["testvec1", testvec1])
+
+testvec2 = [(v - 180) % 360 for v in testvec1]
+doTest(["testvec2", testvec2])
+
+testvec3 = [300, 351, 310, 290, 299, 200]
+doTest(["testvec3", testvec3])
+
+for i in range(20):
+    for j in range(20):
+        vec = [359 - j, i]
+        doTest(["testvec4", vec])
+
+for i in range(20):
+    for j in range(20):
+        vec = [i, 359 - j]
+        doTest(["testvec5", vec])
+
+for i in range(20):
+    testvec6 = [j for j in range(i)] + [350]
+    doTest(["testvec6", testvec6])
+    random.shuffle(testvec6)
+    doTest(["testvec6", testvec6])
+    random.shuffle(testvec6)
+    doTest(["testvec6", testvec6])
+    random.shuffle(testvec6)
+    doTest(["testvec6", testvec6])
