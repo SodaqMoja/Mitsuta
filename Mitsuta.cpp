@@ -33,6 +33,9 @@ void Mitsuta::first(int16_t val)
 
 /*
  * \brief Add the next value using the Mitsuta algorithm
+ *
+ * This is a modified algorithm. The result is the same as
+ * in the original algorithm, but in smaller code size.
  */
 void Mitsuta::next(int16_t val)
 {
@@ -40,17 +43,8 @@ void Mitsuta::next(int16_t val)
     first(val);
     return;
   }
-  int16_t delta = val - _d;
-  if (delta < -180) {
-    _d += delta + 360;
-  } else if (delta < 180) {
-    _d += delta;
-  } else {
-    _d += delta - 360;
-  }
-#if MITSUTA_DEBUG
-  _delta = delta;
-#endif
+  _d -= 180;
+  _d += (val - _d) % 360;
   _sum += _d;
   ++_n;
 }
