@@ -59,7 +59,7 @@ int16_t Mitsuta::mean() const
 {
   if (_n == 0) {
     // Nothing was stored. What can we do?
-    return 0;
+    return 999;
   }
   int16_t value = _sum / _n;
   return (value + 360) % 360;
