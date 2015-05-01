@@ -28,6 +28,7 @@
 # which avoid the if-else statements. They can be cheaper in
 # code size (for example on an Atmel processor).
 
+import sys
 import random
 
 def mitsuta_mean(b):
@@ -55,14 +56,24 @@ def mitsuta_mean2(b):
     m = mysum / len(b)
     return (m + 360) % 360
 
-def mitsuta_mean3(b):
+def mitsuta_mean3(b, doDiag=False):
     D = b[0]
     mysum = D
+    n = 1
     for val in b[1:]:
+        if doDiag:
+            print("_d %d" % D)
         D = D - 180
         delta = val - D
+        if doDiag:
+            print("delta %d" % delta)
+            print("delta %% 360 %d" % (delta % 360))
         D = D + (delta % 360)
         mysum = mysum + D
+        n = n + 1
+        if doDiag:
+            m = mysum / n
+            print("mean %d" % ((m + 360) % 360))
     m = mysum / len(b)
     return (m + 360) % 360
 
@@ -72,10 +83,15 @@ def doTest(vec):
     m2 = mitsuta_mean2(vec)
     if m != m2:
         print("m=%d <> m2=%d" % (m, m2))
-    m3 = mitsuta_mean3(vec)
+    m3 = mitsuta_mean3(vec, True)
     if m != m3:
         print("m=%d <> m3=%d" % (m, m3))
     print("%s: %s => %d" % (nm, vec, m))
+
+# unstable wind direction tests
+testvec7 = [345,342,342,342,22,67,12,330,0,36]
+doTest(["testvec7", testvec7])
+sys.exit(0)
 
 testvec1 = [350, 351, 352, 2, 3, 4]
 doTest(["testvec1", testvec1])
